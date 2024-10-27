@@ -42,6 +42,12 @@ in {
   systemd.services."getty@tty1" = {
     enable = false;
   };
+  # The LVGUI interface can be used with volume keys for selecting
+  # and power to activate an option.
+  # Without this, logind just powers off :).
+  services.logind.extraConfig = ''
+    HandlePowerKey=ignore
+  '';
       users.users.root.password = "nixos";
       # mobile.quirks.qualcomm.sdm845-modem.enable = true;
       nixpkgs.config.allowUnfree = true;
