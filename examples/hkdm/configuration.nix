@@ -40,7 +40,7 @@ in {
         uid = 1000;
       };
   systemd.services."getty@tty1" = {
-    enable = false;
+    enable = true;
   };
   # The LVGUI interface can be used with volume keys for selecting
   # and power to activate an option.
