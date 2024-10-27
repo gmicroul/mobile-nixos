@@ -39,7 +39,9 @@ in {
         ];
         uid = 1000;
       };
-
+  systemd.services."getty@tty1" = {
+    enable = false;
+  };
       users.users.root.password = "nixos";
       # mobile.quirks.qualcomm.sdm845-modem.enable = true;
       nixpkgs.config.allowUnfree = true;
