@@ -16,14 +16,14 @@
     splash = lib.mkDefault true;
   };
 
-  programs.calls.enable = true;
+ # programs.calls.enable = true;
 
   environment.systemPackages = with pkgs; [
   ];
 
   hardware.sensor.iio.enable = true;
   #sound.enable = true;
-  nixpkgs.config.pulseaudio = true;
+#  nixpkgs.config.pulseaudio = true;
   hardware.bluetooth.enable = true;
   hardware.pulseaudio.enable = lib.mkDefault true; # mkDefault to help out users wanting pipewire
   networking.networkmanager.enable = true;
