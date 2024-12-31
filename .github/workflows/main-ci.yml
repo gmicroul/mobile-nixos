@@ -1,44 +1,36 @@
 name: main-ci
 on:
+  repository_dispatch:
   workflow_dispatch:
-  push:
-    branches: [ "**" ]
-  pull_request:
-    branches: [ "**" ]
-
+    inputs:
+      set_example:
+        description: "oneplus"
+        required: true
+        default: "fajita"
 jobs:
-  Parse_nix:
-    runs-on: [ubuntu-latest]
+  build:
+    runs-on: ubuntu-20.04
+    if: github.event.repository.owner.id == github.event.sender.id
+
     steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
-      - name: "Parse .nix files"
-        run: |
-          git ls-files | grep '.nix$' | xargs nix-instantiate --parse --quiet > /dev/null
-  Instantiation:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: "Instantiation"
-        run: |
-          nix-env --out-path -qaP --no-name -f .ci/instantiate-all.nix \
-            | sed -e 's/\+\+/./g' \
-            | sort
-  Documentation:
-    runs-on: [ubuntu-latest]
-    steps:
-      - uses: "actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f"
-      - uses: "cachix/install-nix-action@07da2520eebede906fbeefa9dd0a2b635323909d"
+          name: build-artifacts-mido-sailfishos
+          path: /home/runner/work/mobile-nixos/mobile-nixos/artifacts/*
+
+      - name: Upload image to Release
+        uses: ncipollo/release-action@main
+        #if: steps.compile.outputs.status == 'success' && !cancelled()
         with:
-          nix_path: nixpkgs=channel:nixos-unstable
-      - name: "Build documentation"
-        run: |
-          nix-build doc
-          cp -prf $(readlink -f result) built-documentation
-      - uses: actions/upload-artifact@v4
-        with:
-          name: documentation
-          path: built-documentation
+          tag: oneplus-fajita
+          artifacts: /home/runner/work/mobile-nixos/mobile-nixos/artifacts/*.zip
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            This is NixOS for Oneplus fajita
+
+        
