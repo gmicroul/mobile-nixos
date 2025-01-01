@@ -51,6 +51,7 @@ jobs:
         with: 
           nix_path: nixpkgs=channel:nixos-unstable
       - run: |
+          export NIXPKGS_ALLOW_UNFREE=1
           nix-build examples/phosh --argstr device oneplus-fajita -A outputs.default
           mkdir workdir
           pwd
