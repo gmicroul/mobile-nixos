@@ -59,7 +59,8 @@ jobs:
           cp /nix/store/*fajita*/*.img ./workdir/
           cd workdir
           ls -ltrh
-          zip fajita-nixos.zip boot.img system.img
+          zip fajita-nixos.zip system.img boot.img
+          ls -ltrh
 
       - name: Check nix-shell status
         run: |
@@ -84,7 +85,7 @@ jobs:
         if: ${{ success() }}
         uses: actions/upload-artifact@v4
         with:
-          name: build-artifacts-fajita-sailfishos
+          name: build-artifacts-fajita-nixos-phosh
           path: ./workdir/*.zip
 
       - name: Upload image to Release
