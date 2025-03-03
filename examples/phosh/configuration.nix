@@ -21,6 +21,10 @@ in
         "wheel"
       ];
     };
+
+    services.xserver.desktopManager.phosh = {
+      user = defaultUserName;
+    };
     # Networking, modem and misc.
     {
       # Ensures any rndis config from stage-1 is not clobbered by NetworkManager
@@ -36,8 +40,5 @@ in
       # Not a good idea given the fact this config is insecure (well-known password).
       services.openssh.enable = true;
     }    
-    services.xserver.desktopManager.phosh = {
-      user = defaultUserName;
-    };
   };
 }
