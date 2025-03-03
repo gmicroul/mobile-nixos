@@ -55,13 +55,14 @@ jobs:
           nix-build examples/phosh --argstr device oneplus-fajita -A outputs.default
           mkdir workdir
           pwd
-          #sudo apt update -y && sudo apt install xz-utils
+          sudo apt update -y && sudo apt install img2simg
           cp /nix/store/*fajita*/*.img ./workdir/
           cd workdir
           ls -ltrh
+          img2simg system.img system.simg
           zip fajita-nixos.zip system.img boot.img
           ls -ltrh
-          tar cf - system.img boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
+          tar cf - system.simg boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
           ls -ltrh
 
       - name: Check nix-shell status
