@@ -61,7 +61,7 @@ jobs:
           ls -ltrh
           zip fajita-nixos.zip system.img boot.img
           ls -ltrh
-          tar -cJvf fajita-nixos-system.tar.xz --use-compress-program=xz system.img
+          tar cf - system.img boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
           ls -ltrh
 
       - name: Check nix-shell status
