@@ -88,14 +88,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-fajita-nixos-phosh
-          path: ./workdir/*.zip
+          path: ./workdir/*.tar.xz
 
       - name: Upload image to Release
         if: ${{ success() }}
         uses: ncipollo/release-action@main
         with:
           tag: oneplus-fajita
-          artifacts: ./workdir/*.zip
+          artifacts: ./workdir/*.tar.xz
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
