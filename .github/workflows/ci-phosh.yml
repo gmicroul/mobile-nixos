@@ -55,15 +55,15 @@ jobs:
           nix-build examples/phosh --argstr device oneplus-fajita -A outputs.default
           mkdir workdir
           pwd
-          sudo apt update -y && sudo apt install android-sdk-libsparse-utils
+          #sudo apt update -y && sudo apt install android-sdk-libsparse-utils
           cp /nix/store/*fajita*/*.img ./workdir/
           cd workdir
           ls -ltrh
-          img2simg system.img system.simg
+          #img2simg system.img system.simg
           zip fajita-nixos.zip system.img boot.img
           ls -ltrh
-          tar cf - system.simg boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
-          ls -ltrh
+          #tar cf - system.simg boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
+          #ls -ltrh
 
       - name: Check nix-shell status
         run: |
@@ -89,14 +89,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-fajita-nixos-phosh
-          path: ./workdir/*.tar.xz
+          path: ./workdir/*.zip
 
       - name: Upload image to Release
         if: ${{ success() }}
         uses: ncipollo/release-action@main
         with:
           tag: oneplus-fajita
-          artifacts: ./workdir/*.tar.xz
+          artifacts: ./workdir/*.zip
           allowUpdates: true
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
