@@ -59,7 +59,7 @@ jobs:
           cp /nix/store/*fajita*/*.img ./workdir/
           cd workdir
           ls -ltrh
-          #img2simg system.img system.simg
+          img2simg system.img system.simg
           zip fajita-nixos.zip system.img boot.img
           ls -ltrh
           tar cf - system.simg boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
