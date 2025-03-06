@@ -1,0 +1,103 @@
+name: ci-phosh
+
+on:
+  repository_dispatch:
+  workflow_dispatch:
+    inputs:
+      set_example:
+        description: "oneplus"
+        required: true
+        default: "fajita"
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    if: github.event.repository.owner.id == github.event.sender.id
+    
+
+    steps:
+    
+      - name: Maximize build space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 40960
+          swap-size-mb: 4096
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-android: 'true'
+          remove-docker-images: 'true'
+
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: true
+        
+          # all of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          swap-storage: true
+    
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+    
+      - name: nix-build
+        uses: cachix/install-nix-action@v27
+        with: 
+          nix_path: nixpkgs=channel:nixos-unstable
+      - run: |
+          export NIXPKGS_ALLOW_UNFREE=1
+          nix-build examples/phosh --argstr device oneplus-fajita -A outputs.default
+          mkdir workdir
+          pwd
+          sudo apt update -y && sudo apt install android-sdk-libsparse-utils
+          cp /nix/store/*fajita*/*.img ./workdir/
+          cd workdir
+          ls -ltrh
+          #img2simg system.img system.simg
+          zip fajita-nixos.zip system.img boot.img
+          ls -ltrh
+          tar cf - system.simg boot.img | xz -9 -z -c > fajita-nixos-system.tar.xz
+          ls -ltrh
+
+      - name: Check nix-shell status
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "nix-shell failed!"
+            exit 1
+          else
+            echo "nix-shell succeeded."
+          fi
+
+      - name: Check nix-build status
+        if: ${{ success() }}
+        run: |
+          if [ $? -ne 0 ]; then
+            echo "nix-build failed!"
+            exit 1
+          else
+            echo "nix-build succeeded."
+          fi
+
+      - name: Upload artifacts
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-fajita-nixos-phosh
+          path: ./workdir/*.tar.xz
+
+      - name: Upload image to Release
+        if: ${{ success() }}
+        uses: ncipollo/release-action@main
+        with:
+          tag: oneplus-fajita
+          artifacts: ./workdir/*.tar.xz
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+          body: |
+            This is NixOS for Oneplus fajita
