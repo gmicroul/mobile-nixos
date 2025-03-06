@@ -1,4 +1,4 @@
-name: ci-phosh
+name: tar-ci-phosh
 
 on:
   repository_dispatch:
