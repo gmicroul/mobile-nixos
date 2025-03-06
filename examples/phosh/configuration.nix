@@ -27,10 +27,10 @@ in
     };
   
     # Ensures any rndis config from stage-1 is not clobbered by NetworkManager
-    networking.networkmanager.unmanaged = [ "rndis0" "usb0" ];
+    # networking.networkmanager.unmanaged = [ "rndis0" "usb0" ];
 
     # Setup USB gadget networking in initrd...
-    mobile.boot.stage-1.networking.enable = lib.mkDefault true;
+    # mobile.boot.stage-1.networking.enable = lib.mkDefault true;
     
 
 
