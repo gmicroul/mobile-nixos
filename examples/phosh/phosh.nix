@@ -17,14 +17,14 @@
     group = "users";
   };
 
-  programs.calls.enable = true;
+  # programs.calls.enable = true;
 
   environment.systemPackages = with pkgs; [
     # Disabled since it uses `olm` which was marked insecure.
     #chatty              # IM and SMS
     epiphany            # Web browser
     gnome-console       # Terminal
-    megapixels          # Camera
+    #megapixels          # Camera
   ];
 
   hardware.sensor.iio.enable = true;
