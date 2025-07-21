@@ -18,6 +18,7 @@
   };
 
   # programs.calls.enable = true;
+  system.stateVersion = "24.05";
 
   environment.systemPackages = with pkgs; [
     # Disabled since it uses `olm` which was marked insecure.
