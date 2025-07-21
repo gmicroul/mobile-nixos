@@ -1,4 +1,4 @@
-name: ci-phosh
+name: ci6-phosh
 
 on:
   repository_dispatch:
@@ -20,8 +20,8 @@ jobs:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
-          root-reserve-mb: 81920
-          swap-size-mb: 8192
+          root-reserve-mb: 40960
+          swap-size-mb: 4096
           remove-dotnet: 'true'
           remove-haskell: 'true'
           remove-android: 'true'
@@ -32,7 +32,7 @@ jobs:
         with:
           # this might remove tools that are actually needed,
           # if set to "true" but frees about 6 GB
-          tool-cache: true
+          tool-cache: false
         
           # all of these default to true, but feel free to set to
           # "false" if necessary for your workflow
